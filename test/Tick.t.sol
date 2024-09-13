@@ -455,8 +455,13 @@ contract TickTest is Test, GasSnapshot {
 
                 info = ticks(2);
 
-                assertEq(info.liquidityGross, liquidityGrossAfter);
-                assertEq(info.liquidityNet, liquidityNetAfter);
+                if (liquidityDelta <= 0 && liquidityGross == uint256(int256(-liquidityDelta))) {
+                    assertEq(info.liquidityGross, 0);
+                    assertEq(info.liquidityNet, 0);
+                } else {
+                    assertEq(info.liquidityGross, liquidityGrossAfter);
+                    assertEq(info.liquidityNet, liquidityNetAfter);
+                }
             } catch (bytes memory reason) {
                 assertEq(reason, stdError.arithmeticError);
             }
